@@ -1,0 +1,17 @@
+{
+  "attention": [
+    {
+      "card": "c1",
+      "model": "m-demo",
+      "framework": "infer",
+      "precision": "fp16"
+    },
+    {
+      "card": "c2",
+      "model": "m-demo",
+      "framework": "train",
+      "precision": "int8"
+    }
+  ],
+  "allow_new_framework_discovery": true
+}
