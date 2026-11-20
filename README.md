@@ -15,3 +15,22 @@
 ## 检查
 
 运行 python -m unittest discover -s tests -v 检查来源端、原件、门户状态和合成接收端本身。涉及页面的数据源测试会启动真实Chromium。它不验证任何尚未编写的采集程序，也不代表采集业务验收已经通过。
+
+## 采集程序
+
+collector/ 是已实现的 Python + Chromium 采集客户端，只操作用户可见的控件、详情与下载（边界见 docs/source-contract.md），把组合证据落入本地 SQLite 资料库，重启后续采。
+
+```bash
+# 采集（关注范围可选；默认发现页面全部分支并采集）
+python3 -m collector collect --portal http://127.0.0.1:8765 --attention inputs/request.json
+# 按组合查询最新结论及出处（当时选项、子项、文件摘要）
+python3 -m collector query --card c1 --driver d10 --framework infer --precision fp16
+# 总览：已观察/仍无测试依据/矛盾/新出现分支
+python3 -m collector report
+# 关注清单逐项核对
+python3 -m collector attention --attention inputs/request.json
+```
+
+行为要点：只采集页面允许选择的组合；"不支持""尚未测"按发布方原文记录，"当前筛选没有记录"是资料库查询结果，三者不混；汇总与子项矛盾时双方原文都保留；驱动别名与实际构建号分别记录，版本号按段比较；发布方更正（修订上升）只重查该卡型的组合；同名下载按组合与修订分目录保存；选择过程未完成只留尝试记录，绝不记成"不支持"。资料库与下载默认写入 var/（可用 --db、--downloads 更改）。
+
+运行 python -m unittest discover -s tests -v 会同时用真实 Chromium 检查采集程序的控件联动、版本更正与未测状态处理。

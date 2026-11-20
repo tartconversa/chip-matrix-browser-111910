@@ -14,3 +14,6 @@ __pycache__/
 # 本地演练来源状态
 source-state.json
 *.state.json
+
+# 采集程序本地资料库与下载的原始记录
+var/
